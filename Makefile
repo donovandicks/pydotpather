@@ -12,7 +12,7 @@ clean:
 	@find . -type d -name '*.ropeproject' | xargs rm -rf
 	@rm -rf build/
 	@rm -rf dist/
-	@rm -f src/*.egg*
+	@rm -rf src/*.egg*
 	@rm -f MANIFEST
 	@rm -rf docs/build/
 	@rm -f .coverage.*
