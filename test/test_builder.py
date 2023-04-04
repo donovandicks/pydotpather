@@ -1,4 +1,4 @@
-from src.builder import build_paths
+from dotpather import build_paths
 
 
 def test_builder_one_layer():
