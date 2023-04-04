@@ -25,6 +25,9 @@ init:
 install:
 	./venv/bin/pip install .
 
+lint:
+	ruff check .
+
 dev-deps:
 	./venv/bin/pip install -U $(DEV_DEPS) $(TEST_DEPS)
 

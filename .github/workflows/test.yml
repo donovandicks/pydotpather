@@ -1,11 +1,11 @@
 ---
-name: Python package
+name: Test Flow
 
 on:
   - push
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
