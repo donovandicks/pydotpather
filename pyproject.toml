@@ -27,3 +27,6 @@ testpaths = [
   "test",
   "test/bench*.py",
 ]
+
+[tool.ruff]
+ignore = ["E501"]
