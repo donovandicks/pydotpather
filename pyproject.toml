@@ -1,0 +1,29 @@
+[project]
+name = "dotpather"
+version = "0.1.0"
+requires-python = ">=3.7"
+dependencies = []
+authors = [
+  { name = "Donovan Dicks"}
+]
+
+[project.optional-dependencies]
+test = ["pytest", "pytest-benchmark", "pytest-sugar", "pytest-examples"]
+dev = ["black", "ruff"]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+
+[tool.pytest.ini_options]
+markers = [
+  "examples",
+  "benchmarks",
+]
+pythonpath = [
+  ".",
+  "src",
+]
+testpaths = [
+  "test",
+  "test/bench*.py",
+]
