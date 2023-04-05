@@ -1,85 +1,44 @@
 """Build dotpaths from dictionaries."""
 
-from typing import Dict, List, Set, Union
+from typing import Any, Dict, Iterable, List, Set, Tuple, Union
 
 
-def parse_seq(seq: Union[List, Set], parent_key: str) -> Dict:
-    """
-    Parse a sequence of items recursively.
+def _iter_map(obj: Dict) -> Iterable[Tuple[Any, Any]]:
+    for key, val in obj.items():
+        yield (key, val)
 
-    Parameters
-    ----------
-    seq: List | Set
-        a sequence of items which may themselves be sequences or dictionaries
-    parent_key: str
-        the key of the current sequence
 
-    Return
-    ------
-    Dict
-        a dictionary where the keys begin with `parent_key[index]` and map to the values
-        within the sequence
+def _make_map_key(parent_key: str, key: str) -> str:
+    return f"{parent_key}.{key}"
 
-    Examples
-    --------
-    ```py
-    from dotpather.builder import parse_seq
 
-    assert parse_seq(seq=[1, 2, 3], parent_key="items") == {
-        "items[0]": 1,
-        "items[1]": 2,
-        "items[2]": 3
-    }
-    ```
-    """
+def _iter_seq(obj: Union[List, Set]) -> Iterable[Tuple[int, Any]]:
+    for idx, elm in enumerate(obj):
+        yield (idx, elm)
+
+
+def _make_seq_key(parent_key: str, idx: int) -> str:
+    return f"{parent_key}[{idx}]"
+
+
+def _build_paths(obj: Union[Dict, List, Set], parent_key: str) -> Dict:
     output = {}
-    for idx, elm in enumerate(seq):
-        new_key = f"{parent_key}[{idx}]"
-        if isinstance(elm, Dict):
-            output.update(parse_dict(elm, parent_key=new_key))
-        else:
-            output[new_key] = elm
-    return output
+    if isinstance(obj, Dict):
+        iterator = _iter_map
+        key_maker = _make_map_key
+    else:
+        iterator = _iter_seq
+        key_maker = _make_seq_key
 
-
-def parse_dict(map: Dict, parent_key: str) -> Dict:
-    """
-    Parse a dictionary of items recursively.
-
-    Parameters
-    ----------
-    map: Dictionary
-        a dictionary of items which may have values of any type
-    parent_key: str
-        the key of the current sequence
-
-    Return
-    ------
-    Dict
-        a dictionary where the keys begin with `parent_key` and map to the values within
-        the dictionary
-
-    Examples
-    --------
-    ```py
-    from dotpather.builder import parse_dict
-
-    assert parse_dict(map={"a": 1, "b": 2, "c": 3}, parent_key="items") == {
-        "items.a": 1,
-        "items.b": 2,
-        "items.c": 3
-    }
-    ```
-    """
-    output = {}
-    for key, val in map.items():
-        new_key = f"{parent_key}.{key}" if parent_key else key
+    for key, val in iterator(obj):
+        new_key = key_maker(parent_key, key)
         if isinstance(val, Dict):
-            output.update(parse_dict(val, parent_key=new_key))
+            output.update(_build_paths(val, parent_key=new_key))
         elif isinstance(val, (List, Set)):
-            output.update(parse_seq(val, parent_key=new_key))
+            output.update(_build_paths(val, parent_key=new_key))
         else:
             output[new_key] = val
+
     return output
 
 
@@ -123,11 +82,9 @@ def build_paths(map: Dict) -> Dict:
     """
     output = {}
     for key, val in map.items():
-        if isinstance(val, Dict):
-            output.update(parse_dict(val, parent_key=key))
-        elif isinstance(val, (List, Set)):
-            output.update(parse_seq(val, parent_key=key))
-        else:
+        if not isinstance(val, (Dict, List, Set)):
             output[key] = val
+        else:
+            output.update(_build_paths(val, parent_key=key))
 
     return output
