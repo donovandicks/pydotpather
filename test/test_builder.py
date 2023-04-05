@@ -1,3 +1,6 @@
+import pytest
+from pytest_examples import CodeExample, EvalExample, find_examples
+
 from dotpather import build_paths
 
 
@@ -85,3 +88,13 @@ def test_builder_with_multiple_sub_structures():
         "c.d.e.f[1].j[1]": 8,
         "c.d.e.f[1].j[2]": 9,
     }
+
+
+@pytest.mark.examples
+@pytest.mark.parametrize(
+    "example",
+    find_examples("src/dotpather"),
+    ids=str,
+)
+def test_docstrings(example: CodeExample, eval_example: EvalExample):
+    eval_example.run(example)
