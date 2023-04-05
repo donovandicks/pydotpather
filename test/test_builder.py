@@ -46,6 +46,12 @@ def test_builder_with_sequence_of_dicts():
     assert build_paths(d) == {"a[0].b": 0, "a[1].c": 1}
 
 
+def test_builder_with_sequence_of_sequence():
+    d = {"a": [0, [1], [2, [3]]]}
+
+    assert build_paths(d) == {"a[0]": 0, "a[1][0]": 1, "a[2][0]": 2, "a[2][1][0]": 3}
+
+
 def test_builder_with_multiple_sub_structures():
     d = {
         "a": [
