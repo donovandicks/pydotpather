@@ -1,8 +1,7 @@
 ---
 name: Lint Flow
 
-on:
-  - push
+on: [push, pull_request]
 
 jobs:
   lint:
@@ -13,3 +12,4 @@ jobs:
         with:
           src: src/
           args: --config pyproject.toml
+      - uses: psf/black@stable

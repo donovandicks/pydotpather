@@ -26,7 +26,11 @@ install:
 	./venv/bin/pip install .
 
 lint:
+	black --check .
 	ruff check --config pyproject.toml src/
+
+fmt:
+	black .
 
 dev-deps:
 	./venv/bin/pip install -U $(DEV_DEPS) $(TEST_DEPS)

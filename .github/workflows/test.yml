@@ -1,8 +1,7 @@
 ---
 name: Test Flow
 
-on:
-  - push
+on: [push, pull_request]
 
 jobs:
   test:
