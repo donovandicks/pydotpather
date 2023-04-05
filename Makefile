@@ -26,7 +26,7 @@ install:
 	./venv/bin/pip install .
 
 lint:
-	ruff check .
+	ruff check --config pyproject.toml src/
 
 dev-deps:
 	./venv/bin/pip install -U $(DEV_DEPS) $(TEST_DEPS)

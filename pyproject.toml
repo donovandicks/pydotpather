@@ -29,4 +29,5 @@ testpaths = [
 ]
 
 [tool.ruff]
-ignore = ["E501"]
+select = ["E", "F", "D"]
+ignore = ["E501", "D212", "D203"]
