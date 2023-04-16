@@ -1,58 +1,56 @@
 import pytest
 from pytest_examples import CodeExample, EvalExample, find_examples
 
-from dotpather import build_paths
 
-
-def test_builder_one_layer():
+def test_builder_one_layer(pb):
     d = {"a": 1, "b": 2, "c": 3}
 
-    assert build_paths(d) == d
+    assert pb.build_paths(d) == d
 
 
-def test_builder_two_layers():
+def test_builder_two_layers(pb):
     d = {"a": {"b": 2}}
 
-    assert build_paths(d) == {"a.b": 2}
+    assert pb.build_paths(d) == {"a.b": 2}
 
 
-def test_builder_three_layers():
+def test_builder_three_layers(pb):
     d = {"a": {"b": {"c": 3}}}
 
-    assert build_paths(d) == {"a.b.c": 3}
+    assert pb.build_paths(d) == {"a.b.c": 3}
 
 
-def test_builder_eight_layers():
+def test_builder_eight_layers(pb):
     d = {"a": {"b": {"c": {"d": {"e": {"f": {"g": {"h": 8}}}}}}}}
 
-    assert build_paths(d) == {"a.b.c.d.e.f.g.h": 8}
+    assert pb.build_paths(d) == {"a.b.c.d.e.f.g.h": 8}
 
 
-def test_builder_with_sequence():
+def test_builder_with_sequence(pb):
     d = {"a": [0, 1, 2]}
 
-    assert build_paths(d) == {"a[0]": 0, "a[1]": 1, "a[2]": 2}
+    assert pb.build_paths(d) == {"a[0]": 0, "a[1]": 1, "a[2]": 2}
 
 
-def test_builder_with_subsurface_sequence():
+def test_builder_with_subsurface_sequence(pb):
     d = {"a": {"b": [0, 1, 2]}}
 
-    assert build_paths(d) == {"a.b[0]": 0, "a.b[1]": 1, "a.b[2]": 2}
+    assert pb.build_paths(d) == {"a.b[0]": 0, "a.b[1]": 1, "a.b[2]": 2}
 
 
-def test_builder_with_sequence_of_dicts():
+def test_builder_with_sequence_of_dicts(pb):
     d = {"a": [{"b": 0}, {"c": 1}]}
 
-    assert build_paths(d) == {"a[0].b": 0, "a[1].c": 1}
+    assert pb.build_paths(d) == {"a[0].b": 0, "a[1].c": 1}
 
 
-def test_builder_with_sequence_of_sequence():
+def test_builder_with_sequence_of_sequence(pb):
     d = {"a": [0, [1], [2, [3]]]}
 
-    assert build_paths(d) == {"a[0]": 0, "a[1][0]": 1, "a[2][0]": 2, "a[2][1][0]": 3}
+    assert pb.build_paths(d) == {"a[0]": 0, "a[1][0]": 1, "a[2][0]": 2, "a[2][1][0]": 3}
 
 
-def test_builder_with_multiple_sub_structures():
+def test_builder_with_multiple_sub_structures(pb):
     d = {
         "a": [
             {
@@ -82,7 +80,7 @@ def test_builder_with_multiple_sub_structures():
         },
     }
 
-    assert build_paths(d) == {
+    assert pb.build_paths(d) == {
         "a[0].b": 1,
         "a[0].c.d": 2,
         "a[0].c.e[0]": 3,
